@@ -1,0 +1,13 @@
+Key Learnings
+
+1. After the past week's project consulation session, I was forced to admit that I had analyzed the dataset for Germany
+without having a clear idea what question I wanted to answer. It is very easy to be mesmerised by the power that the
+data visualisation toolkit brings, but all this power is worth very little if it is used aimlessly. Looking at a single country
+does not make much sense if one wants to gain insight into broader migration patterns of birds. That why I have decided to pick out
+a number of bird species' migration patterns to analyse.
+
+2. I have become more comfortable with pandas and the data visualisation tools for Python and appreciate the need for fluency in the tools
+of data science. As an amateur user of R and the Tidyverse, I felt much less comfortable with Python and its data science tools, but I
+recognise that Python does have the advantage of being an all-purpose language while R, simple and powerful as it, has the contraint of
+belonging to the statistics and data visualisation domain. R's simplicity made me more comfortable with it as a tool, but it is necessary 
+to leave that comfort zone and maintain data science "multilingualism", for lack of a better term.
