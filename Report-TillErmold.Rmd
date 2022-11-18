@@ -1,0 +1,89 @@
+---
+title: "Project Report"
+author: "by Till Ermold, CODE University of Applied Sciences, 9th Semester"
+date: '2022-11-17'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("~/Desktop/CODE/SE/Projects/xeno")
+#install.packages("tidyverse")
+#install.packages("plotly")
+#install.packages("skimr")
+library(tidyverse)
+library(plotly)
+library(skimr)
+```
+
+```{r loading the datasets, include=FALSE}
+df_ger <- read_csv("data-ger.csv")
+df_bb <- read_csv("blackbird_filtered.csv")
+```
+
+```{r include=FALSE}
+head(df_ger)
+```
+## Introductory Remarks
+
+The following report was created with R Markdown. All plots in this document have been recreated faithfully from their respective Jupyter Notebooks. This report, as as well its original code can be found at <https://github.com/Till1983/xeno-canto-project-FS2022>
+
+## Abstract
+Like many other birds, the Common Blackbird migrates with changing seasons every year towards more hospitable areas of the planet to escape colder temperatures. We investigate this question by using open data sets for Germany and the Common Blackbird from <https://xeno-canto.org>, examine it through exploratory analysis, and mapp out trends and tendencies in time series graphs and scatter plots. The analysis of the Common Blackbird focuses on a 15-year time period from 2006 to 2021. The results show a tendency towards migration to warmer climates in winter months and to higher altitudes in those warmer climates. The data show a clear concentration of observations in Central, Western, and Northern Europe, providing grounds for caution when drawing conclusions from the data. This has implications for data analysis for other bird species where the distribution of data points is similarly skewed toward a specific area of the planet. The results of this analysis, despite their shortcomings, are consistent with existing observation about bird migration patterns during changing seasons.
+
+## Methods
+The dataset for Germany was analysed for the most commonly occurring bird species through exploratory data analysis. The most common species was then chosen for further analysis. The data for the common blackbird was plotted in a series of graphs. The data was collected using the API-wrapper of xeno-canto, available at <https://pypi.org/project/xeno-canto/>. Variables that were irrelevant for the analysis were removed, and observations with unknown or inconsistent values for latitude, altitude and date were removed. Out of the initial 6044 observations for the Common Blackbird, 5141 observations remain after the clean up of the data. Analysis of different data sets with fewer observations might pose challenges to analysis. It might require filling some of the missing values (for example for altitude) manually. The data comes in JSON-files which have to be merge into a single file to make them ready for clean up and analysis. Steps to import and merge can be found here: <https://github.com/Till1983/xeno-canto-project-FS2022/blob/main/import-normalize-data.ipynb>
+
+## Observations of Appearances
+## Germany
+The **Common Blackbird** is the single most commonly recorded bird in Germany with *1155* recordings. The term **Soundscape** refers to a multitude of sounds in which no one species can be clearly identified and is therefore not relevant for this analysis. Building on this observation we can now move on to investigate the migration pattern of the common blackbird in greater detail.
+
+```{r echo=FALSE}
+# Plotting the 5 most common bird recordings in Germany.
+
+df_ger %>% select(en) %>% count(en) %>% arrange(desc(n)) %>% slice_head(n=5) %>% ggplot(aes(reorder(en, -n), n)) + geom_col(aes(fill=en)) + labs(title = "The 5 most common bird recordings in Germany", x = "Name of Species", y = "Count", caption = "Figure 1. 27659 observations in total for Germany") + theme(legend.position = "none")
+```
+
+Most recordings of the Common Blackbird between 2006 and 2021 were made in countries in Central, Western, and Northern Europe, with only a small number of recordings made in Africa, Asia, and Oceania.
+
+```{r echo=FALSE}
+#table(df_bb$cnt)
+df_bb %>% select(cnt) %>% count(cnt) %>% arrange(desc(n)) %>% ggplot(aes(reorder(cnt, -n), n, width=0.85)) + geom_col(aes(fill="cnt"))  + labs(title = "Common Blackbird - Recordings by Country", x = "country", y = "count", caption = "Figure 2. Clear concentration of observations in Europe") + scale_x_discrete() + coord_flip() + theme(legend.position  = "None")
+```
+
+## Migration Patterns
+The xeno-canto project was launched on May 30, 2005. In the immediate time period after the launch, very few observations were made. After 2010 the collection of data increases and a clearer picture emerges. In the winter months, we observe a migration from North to South towards warmer areas of the planet.
+
+```{r echo=FALSE}
+# Average latitude measurements from 2006 to 2021
+df_bb %>% filter(lat >= 0) %>%
+ggplot(aes(date, lat)) + geom_line() + labs(title = "Common Blackbird Observations by Latitude", y = "latitude", caption = "Figure 3") + scale_x_date(date_labels = "%Y %b")
+```
+
+The tendency towards migration to warmer areas, as shown in figure 3 above, is much more evident in the Southern Hemisphere, due, in part, to the smaller number of observations. Since there are overall fewer observations in the Southern Hemisphere, the clarity of Figure 4 below is potentially misleading. More observations are needed to gain clearer insight.
+
+```{r echo=FALSE}
+df_bb %>% filter(lat <= 0) %>%
+ggplot(aes(date, lat)) + geom_line() + labs(title = "Observations of the Common Blackbird by Latitude", y = "latitude", caption = "Figure 4. 29 observations - 14 in Australia, 15 in New Zealand") + scale_x_date(date_labels = "%Y %b")
+```
+
+The number of observations in the Northern Hemisphere vastly exceeds the number of observations in the Southern Hemisphere. The observations in the Southern Hemisphere are confined to 2 countries - Australia and New Zealand. We will split the analysis between Northern Hemisphere and Southern Hemisphere for purposes of clarity.
+
+```{r echo=FALSE}
+df_bb %>% ggplot(aes(lat, alt)) + geom_point() + labs(title = "Common Blackbird Observations by Latitude and Altitude", x="latitude", y="altitude", caption = "Figure 5")
+```
+
+More observations are made in lower altitudes than in higher altitudes, and the further north one goes the more observations are made. The relationship, while not linear, does show a trend towards lower altitudes the further north one goes. We advise caution when interpreting these results. Since most of the recordings were made in countries of Central, Western, and Northern Europe, we assume that this is, at least to some extent, due to socio-economic factors. More analysis of those factors is needed to get a clearer picture of reality.
+
+```{r echo=FALSE, message=FALSE}
+df_bb %>%filter(lat >= 0) %>% ggplot(aes(lat, alt)) + geom_point() + labs(title = "Common Blackbird Observations - Northern Hemisphere", x="latitude", y="altitude", caption = "Figure 6") + geom_smooth(se = FALSE)
+```
+
+The relationship between latitude and altitude is more linear for observations in Australia and New Zealand. While there are fewer observations overall, they are suggestive of a similar trend like that shown above in Figure 6.
+
+```{r message=FALSE, echo=FALSE}
+df_bb %>% filter(lat <= 0) %>% ggplot(aes(lat, alt)) + geom_point() + labs(title = "Common Blackbird Observations - Southern Hemisphere", x="latitude", y="altitude", caption = "Figure 7. 29 observations - 14 in Australia, 15 in New Zealand") + geom_smooth(method = "lm", se = FALSE)
+```
+
+### Summary
+The analysis of the migration patterns of the **Common Blackbird** in the preceding paragraphs shows a tendency towards migration to warmer climates in the winter months, both in the Northern and the Southern Hemisphere. There is a tendency towards higher altitudes as the birds migrate towards warmer areas, as they seek out cooler areas in those warmer environments. We advise treating these results with caution, as the smaller number of observations outside of the central and northern parts of Europe risk skewing the results and misleading the reader into seeing a much more consistent picture than that which reality offers. We suggest repeating the analysis with other birds where a greater wealth of data is available for parts of the planet outside of Europe.
