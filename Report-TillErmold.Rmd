@@ -1,7 +1,7 @@
 ---
 title: "Project Report"
-author: "by Till Ermold, CODE University of Applied Sciences, 9th Semester"
-date: '2022-11-17'
+author: "by Till Ermold, CODE University of Applied Sciences, 10th Semester"
+date: '2023-04-27'
 output: pdf_document
 ---
 
@@ -28,7 +28,7 @@ head(df_ger)
 
 ## Introductory Remarks
 
-The following report was created with R Markdown. All plots in this document have been recreated faithfully from their respective Jupyter Notebooks. This report, as as well its original code can be found at <https://github.com/Till1983/xeno-canto-project-FS2022>
+The following report was created with R Markdown. All plots in this document have been recreated faithfully from their respective Jupyter Notebooks. This report, as well as its original code can be found at <https://github.com/Till1983/xeno-canto-project-FS2022>
 
 ## Abstract
 Like many other birds, the Common Blackbird migrates with changing seasons every year towards more hospitable areas of the planet to escape colder temperatures. We investigate this question by using open data sets for Germany and the Common Blackbird from <https://xeno-canto.org>, examine it through exploratory analysis, and mapp out trends and tendencies in time series graphs and scatter plots. The analysis of the Common Blackbird focuses on a 15-year time period from 2006 to 2021. The results show a tendency towards migration to warmer climates in winter months and to higher altitudes in those warmer climates. The data show a clear concentration of observations in Central, Western, and Northern Europe, providing grounds for caution when drawing conclusions from the data. This has implications for data analysis for other bird species where the distribution of data points is similarly skewed toward a specific area of the planet. The results of this analysis, despite their shortcomings, are consistent with existing observation about bird migration patterns during changing seasons.
